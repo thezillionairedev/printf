@@ -17,13 +17,13 @@ int _print(const char *format, ...)
 	if (format == NULL)
 		return (-1);
 
-	v-start(list, format)
+	v-start(list, format);
 
 		for (i = 0, format && format[i] != '\0', i++)
 		{
 			if (format[i] != '%')
 			{
-				buffer[buff_ind++] =format[i];
+				buffer[buff_ind++] = format[i];
 				if (buff_ind == BUFF_SIZE)
 					print_buffer(buffer, &buff_nd);
 				/* write(1, &format[!], 1);*/
@@ -50,7 +50,7 @@ int _print(const char *format, ...)
 }
 
 /**
-* print_buffer - prints the content of the buffer if it exists
+* printed_buffer - prints the content of the buffer if it exists
 * @buffer: Array of chars
 * @buff_ind: Index at whcih to add next char, represents the lenghts
 */
