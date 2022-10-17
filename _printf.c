@@ -1,49 +1,51 @@
-int _print(const char *format, ...)
-{
-        int i printed = 0, printed_chars  = 0;
-        int flags, width, precision, size, buff_ind = 0;
-        va_list list;
-
-        if (format == NULL)
-                return (-1);
-
-        v-start(list, format);
-
-                for (i = 0, format && format[i] != '\0', i++)
-                {
-                        if (format[i] != '%')
-                        {
-                                buffer[buff_ind++] = format[i];
-                                if (buff_ind == BUFF_SIZE)
-                                        print_buffer(buffer, &buff_nd);
-                                /* write(1, &format[!], 1);*/
-                                printed_chars++;
-                        }
-                        else
-                        {
-                                print_buffer(buffer, &buff_ind);
-                                flags = get_flags(format, &i);
-                                width = get_width(format, &i, list);
-                                precision = get_precision(format, &i, list);
-                                size = get_size(format, &i);
-                                ++i;
-                                printed = handle_print(format, &i, list, buffer,
-                                                flags, width, precision, size);
-                                if (printed == -1)
-                                        return (-1);
-                                printed_chars += printed;
-                        }
-                }
-        print_buffer(buffer, &buff_ind);
-        va_end(list);
-        return (printed_chars);
-}
+#include "main.h"
 
 /**
-* printed_buffer - prints the content of the buffer if it exists
-* @buffer: Array of chars
-* @buff_ind: Index at whcih to add next char, represents the lenghts
-*/
+ * _printf - prints and input into the standard output
+ * @format: the format string
+ * Return: number of bytes printed
+ */
 
-void printed_buffer(char buffer[], int *buff_ind)
-"_printf.c" 64L, 1354C                                               
+int _printf(const char *format, ...)
+
+{
+	int sum = 0;
+	va_list ap;
+	char *p, *start;
+
+	params_t params = PARAMS_INIT;
+
+	va_start(ap, format);
+
+	if (!format || (format[0] == '%' && !format[1]))/* checking for NULL char */
+		return (-1);
+	if (format[0] == '%' && format[1] == ' ' && !format[2])
+		return (-1);
+	for (p = (char *)format; *p; p++)
+	{
+		init_params(&params, ap);
+		if (*p != '%')/*checking for the % specifier*/
+		{
+			sum += _putchar(*p);
+			continue;
+		}
+		start = p;
+		p++;
+		while (get_flag(p, &params)) /* while char at p is flag character */
+		{
+			p++; /* next character */
+		}
+		p = get_width(p, &params, ap);
+		p = get_precision(p, &params, ap);
+		if (get_modifier(p, &params))
+			p++;
+		if (!get_specifier(p))
+			sum += print_from_to(start, p,
+					params.l_modifier || params.h_modifier ? p - 1 : 0);
+		else
+			sum += get_print_func(p, ap, &params);
+	}
+	_putchar(BUF_FLUSH);
+	va_end(ap);
+	return (sum);
+}                                  
