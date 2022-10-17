@@ -7,7 +7,6 @@
  */
 
 int _printf(const char *format, ...)
-
 {
 	int sum = 0;
 	va_list ap;
@@ -47,6 +46,5 @@ int _printf(const char *format, ...)
 	}
 	_putchar(BUF_FLUSH);
 	va_end(ap);
-	
 	return (sum);
-}                                  
+}
